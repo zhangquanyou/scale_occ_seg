@@ -1,0 +1,34 @@
+# Ego-HOS 基线配置（第一个跑通的入口，对应论文 5.1）
+# 数据: github.com/owenzlz/EgoHOS，下载脚本在仓库内
+model:
+  num_classes: 2          # hand / object（Ego-HOS 两类）
+  assign_topk: 4
+  assign_thr: 0.5
+
+data:
+  train_ann: data/egohos/annotations/train.json
+  train_dir: data/egohos/train
+  test_ann: data/egohos/annotations/test.json
+  test_dir: data/egohos/test
+  img_size: 768
+  occ_mode: dilate        # 无 amodal 标注时的遮挡区弱监督方式
+
+train:
+  device: cuda
+  epochs: 24
+  batch_size: 4
+  lr: 0.0002
+  weight_decay: 0.0005
+  workers: 4
+  out_dir: outputs/egohos
+  loss_weight:
+    det_cls: 1.0
+    det_box: 2.0
+    det_iou: 1.0
+    seg_vis: 1.0
+    seg_occ: 0.5
+    seg_bound: 1.0
+    seg_hl: 0.5
+
+eval:
+  out_json: outputs/egohos/eval_result.json

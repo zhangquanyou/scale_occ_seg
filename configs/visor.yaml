@@ -1,0 +1,33 @@
+# VISOR-HOS 配置（需先用官方工具转 COCO 格式，见 README）
+model:
+  num_classes: 3          # hand / object / hand--object（按 VISOR HOS 类别调整）
+  assign_topk: 4
+  assign_thr: 0.5
+
+data:
+  train_ann: data/visor/annotations/train_coco.json
+  train_dir: data/visor/train
+  test_ann: data/visor/annotations/valid_coco.json
+  test_dir: data/visor/valid
+  img_size: 768
+  occ_mode: dilate
+
+train:
+  device: cuda
+  epochs: 12              # VISOR 帧量大，轮数少
+  batch_size: 4
+  lr: 0.0002
+  weight_decay: 0.0005
+  workers: 8
+  out_dir: outputs/visor
+  loss_weight:
+    det_cls: 1.0
+    det_box: 2.0
+    det_iou: 1.0
+    seg_vis: 1.0
+    seg_occ: 0.5
+    seg_bound: 1.0
+    seg_hl: 0.5
+
+eval:
+  out_json: outputs/visor/eval_result.json

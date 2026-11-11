@@ -1,0 +1,34 @@
+# MJU-Glass 配置（玻璃表面精细分割，4900 张 RGB-D，arXiv:2508.01639）
+# 数据: github.com/weduake/MJU_Glass
+model:
+  num_classes: 1          # 玻璃实例
+  assign_topk: 4
+  assign_thr: 0.5
+
+data:
+  train_ann: data/mjuglass/annotations/train.json
+  train_dir: data/mjuglass/train
+  test_ann: data/mjuglass/annotations/test.json
+  test_dir: data/mjuglass/test
+  img_size: 640
+  occ_mode: none          # 玻璃数据无手部遮挡概念，遮挡头关闭监督
+
+train:
+  device: cuda
+  epochs: 30
+  batch_size: 4
+  lr: 0.0002
+  weight_decay: 0.0005
+  workers: 4
+  out_dir: outputs/mjuglass
+  loss_weight:
+    det_cls: 1.0
+    det_box: 2.0
+    det_iou: 1.0
+    seg_vis: 1.0
+    seg_occ: 0.0
+    seg_bound: 2.0         # 玻璃开口边界是主指标，边界损失加权
+    seg_hl: 1.0            # 高光分支在玻璃数据上是主监督
+
+eval:
+  out_json: outputs/mjuglass/eval_result.json
